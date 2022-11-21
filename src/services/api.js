@@ -5,17 +5,25 @@ const API = axios.create({
 })
 
 async function signup(newUser) {
-  const { data: { token, email } } = await API.post('/auth/signup', newUser)
-  localStorage.setItem('token', token)
-  localStorage.setItem('email', email)
-  return token
+  try {
+    const { data: { token, email } } = await API.post('/auth/signup', newUser)
+    localStorage.setItem('token', token)
+    localStorage.setItem('email', email)
+    return token
+  } catch (error) {
+    return {error: error.message}
+  }
 }
 
 async function login(newUser) {
-  const { data: { token, email } } = await API.post('/auth/login', newUser)
-  localStorage.setItem('token', token)
-  localStorage.setItem('email', email)
-  return token
+  try {
+    const response = await API.post('/auth/login', newUser)
+    localStorage.setItem('token', response.data?.token)
+    localStorage.setItem('email', response.data?.email)
+    return response.data
+  } catch (error) {
+    return {error: error.message}
+  }
 }
 
 async function getAvailableRooms(checkin, checkout) {
