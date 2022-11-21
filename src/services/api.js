@@ -1,28 +1,24 @@
 import axios from 'axios'
 
 const API = axios.create({
-  baseURL: 'https://hotelerio-backend-api.onrender.com/api'
+  baseURL: 'http://localhost:2222/api'
 })
 
 async function signup(newUser) {
   try {
-    const { data: { token, email } } = await API.post('/auth/signup', newUser)
-    localStorage.setItem('token', token)
-    localStorage.setItem('email', email)
-    return token
+    const { data } = await API.post('/auth/signup', newUser)
+    return data
   } catch (error) {
-    return {error: error.message}
+    return { error: error.message }
   }
 }
 
 async function login(newUser) {
   try {
-    const response = await API.post('/auth/login', newUser)
-    localStorage.setItem('token', response.data?.token)
-    localStorage.setItem('email', response.data?.email)
-    return response.data
+    const { data } = await API.post('/auth/login', newUser)
+    return data
   } catch (error) {
-    return {error: error.message}
+    return { error: error.message }
   }
 }
 

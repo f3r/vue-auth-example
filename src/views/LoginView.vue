@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import { useAuthStore } from '../stores/store'
+
 import API from '../services/api.js';
 
 export default {
@@ -27,15 +29,17 @@ export default {
       newUser: {
         email: '',
         password: ''
-      }
+      },
+      authStore: useAuthStore()
     }
   },
   methods: {
     async loginUser() {
-      const response = await API.login(this.newUser)
-      if (response.error) {
+      const data = await API.login(this.newUser)
+      if (data.error) {
         alert('wrong username/password')
       } else {
+        this.authStore.login(data.token, data.email)
         this.$router.push({name: 'checkAvailableRooms'})
       }
     }

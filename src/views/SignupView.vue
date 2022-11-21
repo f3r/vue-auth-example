@@ -8,16 +8,6 @@
       </label>
 
       <label>
-        SURNAME
-        <input type="text" v-model="newUser.surname"/>
-      </label>
-
-      <label>
-        DNI
-        <input type="text" v-model="newUser.identification"/>
-      </label>
-
-      <label>
         EMAIL
         <input type="email" v-model="newUser.email"/>
       </label>
@@ -33,6 +23,7 @@
 </template>
 
 <script>
+import { useAuthStore } from '../stores/store'
 import API from '../services/api.js';
 
 export default {
@@ -40,19 +31,19 @@ export default {
     return {
       newUser: {
         name: '',
-        surname: '',
-        identification: '',
         email: '',
         password: ''
-      }
+      },
+      authStore: useAuthStore()
     }
   },
   methods: {
     async signupUser() {
-      const response = await API.signup(this.newUser)
-      if (response.error) {
+      const data = await API.signup(this.newUser)
+      if (data.error) {
         alert('Error creating account')
       } else {
+        this.authStore.login(data.token, data.email)
         this.$router.push({name: 'checkAvailableRooms'})
       }
     }
